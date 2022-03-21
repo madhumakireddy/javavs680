@@ -1,0 +1,10 @@
+Testcase: edu.umb.cs680.hw01.PrimeGeneratorTest
+Test: invalidInputRangeEndNegativeNumber() took 68 milli sec(s)
+Test: BothValuesInRangeAreEqual() took 0 milli sec(s)
+Test: primes() took 2 milli sec(s)
+Test: invalidInputRangeStartNegativeNumber() took 1 milli sec(s)
+Test: noPrimes() took 1 milli sec(s)
+Test: invalidInputRangeValues() took 1 milli sec(s)
+Test: BothValuesInRangeAreZeroes() took 1 milli sec(s)
+Test: RangeWithNegativeValues() took 0 milli sec(s)
+Tests run: 8, Failures: 0, Skipped: 0, Aborted: 0, Time elapsed: 105 milli sec(s)
