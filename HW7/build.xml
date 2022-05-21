@@ -1,0 +1,100 @@
+<!--  To run this build script, type: 
+
+      ant -f hw.xml
+
+      on a shell. 
+-->
+<project name="HW7-junit5-ivy" basedir="."  default="clean" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="test.src" location="test/src" />
+	<property name="test.bin" location="test/bin" />
+	<property name="ivy.lib" value="lib"/>
+	
+	<path id="classpath">
+		<pathelement location="${bin}" />
+		<pathelement location="${test.bin}" />
+		<fileset dir="${ivy.lib}"/>
+	</path>
+	
+	<target name="init">
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${test.bin}"/>
+		<mkdir dir="test/reports"/>
+		<mkdir dir="${ivy.lib}"/>
+		<!--echo message="CLASSPATH: ${toString:classpath}" /-->
+	</target>
+	
+	<target name="resolve" depends="init"
+			description="--> Download JAR files (listed in ivy.xml) to the 'lib' directory.">
+		<ivy:retrieve/>
+	</target>
+	
+	<target name="compile" depends="resolve">
+		<javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+			<classpath refid="classpath"/>
+			<include name="edu/umb/cs680/HW7/*.java"/>
+			<!-- include name="edu/umb/cs680/HW7/Directory.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/FileSystem.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/File.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/Link.java"/-->
+		</javac>
+		<javac srcdir="${test.src}" destdir="${test.bin}" includeAntRuntime="no"> 
+			<classpath refid="classpath"/>
+			<include name="edu/umb/cs680/HW7/*.java"/>
+			<!-- include name="edu/umb/cs680/HW7/DirectoryTest.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/FileSystemTest.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/FileTest.java"/-->
+			<!-- include name="edu/umb/cs680/HW7/LinkTest.java"/-->
+		</javac>
+	</target>
+
+	<target name="test" depends="compile">
+		<!--junitlauncher printSummary="yes">
+			<classpath refid="classpath" />
+			<test outputdir="test" name="edu.umb.cs680.HW7.DirectoryTest"/>
+			<test outputdir="test" name="edu.umb.cs680.HW7.FileSystemTest"/>
+			<test outputdir="test" name="edu.umb.cs680.HW7.FileTest"/>
+			<test outputdir="test" name="edu.umb.cs680.HW7.LinkTest"/>
+			<listener type="legacy-plain" sendSysOut="true"/>
+		</junitlauncher-->
+	
+		<junitlauncher haltOnFailure="true" printSummary="true">		
+			<classpath refid="classpath" />
+			<testclasses outputdir="test">
+				<fileset dir="${test.bin}">
+					<include name="edu/umb/cs680/HW7/*Test.class"/>
+				</fileset>
+				<listener type="legacy-plain" sendSysOut="true"/>
+				<!--listener type="legacy-brief" sendSysOut="true"/-->
+	        </testclasses>
+		</junitlauncher>
+	</target>
+	
+	<target name="run" depends="test">
+		<java classname="edu.umb.cs680.HW7.Directory"
+				classpathref="classpath"  
+				fork="true"/>
+		<java classname="edu.umb.cs680.HW7.FileSystem"
+				classpathref="classpath"  
+				fork="true"/>
+		<java classname="edu.umb.cs680.HW7.File"
+				classpathref="classpath"  
+				fork="true"/>
+		<java classname="edu.umb.cs680.HW7.Link"
+						classpathref="classpath"  
+						fork="true"/>
+	</target>
+	
+	<target name="clean" depends="run">
+		<delete includeemptydirs="true">
+			<fileset dir="${bin}/edu/umb/cs680/HW7" includes="**/*"/>
+			<fileset dir="${test.bin}/edu/umb/cs680/HW7" includes="**/*"/>
+		</delete>
+	</target>
+	
+    <target name="clean-cache" 
+    		description="--> clean the ivy cache (by default ~/.ivy2/cache)">
+        <ivy:cleancache/>
+    </target>
+</project>
